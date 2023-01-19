@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use std::iter::once;
 use std::str::FromStr;
 use regex::Regex;
-extern crate advent2020;
-use advent2020::read::read_input;
+extern crate advent_lib;
+use advent_lib::read::read_input;
 
 const EXPECTED_FIELDS: &[&str] = &[
     "byr", // (Birth Year)

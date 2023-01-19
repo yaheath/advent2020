@@ -2,8 +2,8 @@
 use std::vec::Vec;
 use std::str::FromStr;
 use regex::Regex;
-extern crate advent2020;
-use advent2020::read::read_input;
+extern crate advent_lib;
+use advent_lib::read::read_input;
 
 #[derive(Debug)]
 struct Pass {

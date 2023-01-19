@@ -296,6 +296,25 @@
         {
             "type": "lldb",
             "request": "launch",
+            "name": "Debug tests 'day15'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=day15",
+                    "--package=advent2020"
+                ],
+                "filter": {
+                    "name": "day15",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
             "name": "Debug executable 'day16'",
             "cargo": {
                 "args": [

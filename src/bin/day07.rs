@@ -4,8 +4,8 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::str::FromStr;
-extern crate advent2020;
-use advent2020::read::read_input;
+extern crate advent_lib;
+use advent_lib::read::read_input;
 
 struct BagRule {
     color: String,

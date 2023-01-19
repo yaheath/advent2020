@@ -1,7 +1,7 @@
 use std::vec::Vec;
-extern crate advent2020;
-use advent2020::read::read_input;
-use advent2020::grid::Grid;
+extern crate advent_lib;
+use advent_lib::read::read_input;
+use advent_lib::grid::Grid;
 
 #[derive(Clone, Copy)]
 enum Seat {
@@ -20,7 +20,7 @@ fn mkgrid(input: &Vec<String>) -> Grid<Seat> {
     })
 }
 
-fn neighbors_immed(x: i32, y: i32, grid: &Grid<Seat>) -> usize {
+fn neighbors_immed(x: i64, y: i64, grid: &Grid<Seat>) -> usize {
     [ (x-1, y-1), (x, y-1), (x+1, y-1),
       (x-1, y),             (x+1, y),
       (x-1, y+1), (x, y+1), (x+1, y+1) ]
@@ -33,7 +33,7 @@ fn neighbors_immed(x: i32, y: i32, grid: &Grid<Seat>) -> usize {
         .count()
 }
 
-fn neighbors_los(x: i32, y: i32, grid: &Grid<Seat>) -> usize {
+fn neighbors_los(x: i64, y: i64, grid: &Grid<Seat>) -> usize {
     [ (-1, -1), (0, -1), (1, -1),
       (-1, 0),           (1, 0),
       (-1, 1),  (0, 1),  (1, 1) ]

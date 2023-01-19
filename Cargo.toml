@@ -11,3 +11,4 @@ regex = "*"
 lazy_static = "*"
 #linked-list = "0"
 itertools = "*"
+advent_lib = { version = "0.1.0", path = "../advent_lib" }
