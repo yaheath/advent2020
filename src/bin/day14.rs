@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::num::ParseIntError;
 use std::str::FromStr;
 use std::vec::Vec;
+use itertools::Itertools;
 extern crate advent_lib;
 use advent_lib::read::read_input;
 
@@ -50,6 +51,16 @@ impl FromStr for Instruction {
     }
 }
 
+fn splode_bits(val: u64) -> Vec<u64> {
+    let mut out = Vec::new();
+    for b in 0..36u64 {
+        if val & (1<<b) != 0 {
+            out.push(1<<b);
+        }
+    }
+    out
+}
+
 struct VM {
     mem: HashMap<usize, u64>,
     mask: Mask,
@@ -74,7 +85,13 @@ impl VM {
         match inst {
             Instruction::SetMask(m) => { self.mask = m.clone(); },
             Instruction::SetMem(loc, val) => {
-                // aughghh
+                let loc:u64 = (*loc as u64 | self.mask.or) & !self.mask.float;
+                splode_bits(self.mask.float)
+                    .iter()
+                    .map(|&m| [0, m].into_iter())
+                    .multi_cartesian_product()
+                    .map(|v| v.into_iter().reduce(|acc, e| acc | e).unwrap() | loc)
+                    .for_each(|l| {self.mem.insert(l as usize, *val);});
             },
         }
     }
