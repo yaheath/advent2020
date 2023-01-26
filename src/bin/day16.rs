@@ -61,14 +61,12 @@ fn setup(input: &Vec<Vec<String>>) -> Input {
 fn part1(input: &Input) -> u64 {
     let valid_ranges: Vec<Range<u64>> = input.rules
         .iter()
-        .map(|rule| rule.valid.iter())
-        .flatten()
+        .flat_map(|rule| rule.valid.iter())
         .cloned()
         .collect();
     input.tickets
         .iter()
-        .map(|row| row.vals.iter())
-        .flatten()
+        .flat_map(|row| row.vals.iter())
         .filter(|val| !valid_ranges.iter().any(|r| r.contains(val)))
         .sum()
 }
@@ -76,8 +74,7 @@ fn part1(input: &Input) -> u64 {
 fn part2(input: &Input) -> u64 {
     let valid_ranges: Vec<Range<u64>> = input.rules
         .iter()
-        .map(|rule| rule.valid.iter())
-        .flatten()
+        .flat_map(|rule| rule.valid.iter())
         .cloned()
         .collect();
     let tickets: Vec<Ticket> = input.tickets
@@ -95,8 +92,7 @@ fn part2(input: &Input) -> u64 {
 
     tickets
         .iter()
-        .map(|row| row.vals.iter().enumerate())
-        .flatten()
+        .flat_map(|row| row.vals.iter().enumerate())
         .for_each(|(idx, val)| {
             columns[idx].insert(*val);
         });

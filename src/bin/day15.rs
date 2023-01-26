@@ -4,7 +4,7 @@ extern crate advent_lib;
 use advent_lib::read::input_as_string;
 
 fn doit(input: &str, target: usize) -> usize {
-    let starting: Vec<usize> = input.split(',').map(|s| s.parse::<usize>()).flatten().collect();
+    let starting: Vec<usize> = input.split(',').flat_map(|s| s.parse::<usize>()).collect();
     let mut turn = 1usize;
     let mut last = 0;
     //let mut map: HashMap<usize, (usize, usize)> = HashMap::new();

@@ -301,8 +301,7 @@ fn part2(tiles: &Vec<Tile>) -> usize {
         let matches = m.find_in_grid(&grid);
         if matches.len() > 0 {
             let monsterlocs:HashSet<(i64,i64)> = matches.iter()
-                .map(|(mx, my)| m.coords.iter().map(move |(cx, cy)| (*mx+*cx, *my+*cy)))
-                .flatten()
+                .flat_map(|(mx, my)| m.coords.iter().map(move |(cx, cy)| (*mx+*cx, *my+*cy)))
                 .collect();
             return grid.iter_with_coord()
                 .filter(|(v, x, y)| *v && !monsterlocs.contains(&(*x, *y)))

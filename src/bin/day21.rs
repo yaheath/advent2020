@@ -33,7 +33,7 @@ fn bothparts(input: &Vec<Food>) -> (usize, String) {
         }
     }
     let all_allergens:HashSet<String> = allergen_map
-        .iter().map(|(_,v)| v.iter()).flatten().cloned().collect();
+        .iter().flat_map(|(_,v)| v.iter()).cloned().collect();
     let part1 = all_ingredients.iter()
         .filter(|i| !all_allergens.contains(*i))
         .count();

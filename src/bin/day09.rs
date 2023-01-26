@@ -6,7 +6,7 @@ use advent_lib::read::read_input;
 fn part1(input: &Vec<i64>) -> i64 {
     input
         .windows(26)
-        .map(|w| {
+        .flat_map(|w| {
             let mut sums = w.iter()
                 .take(25)
                 .tuple_combinations()
@@ -19,7 +19,6 @@ fn part1(input: &Vec<i64>) -> i64 {
                 None
             }
         })
-        .flatten()
         .next()
         .unwrap()
 }
