@@ -18,8 +18,8 @@ impl FromStr for Rule {
         let mut spl = s.split(": ");
         let name = spl.next().unwrap();
         let mut spl = spl.next().unwrap().split(" or ");
-        let range1 = range_from_str(spl.next().unwrap()).unwrap();
-        let range2 = range_from_str(spl.next().unwrap()).unwrap();
+        let range1 = range_from_str(spl.next().unwrap(), true).unwrap();
+        let range2 = range_from_str(spl.next().unwrap(), true).unwrap();
         Ok(Self {
             name: name.into(),
             valid: [range1, range2],

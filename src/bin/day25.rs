@@ -51,7 +51,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn day24_test() {
+    fn day25_test() {
         let input:Vec<u64> = vec![5764801, 17807724];
         assert_eq!(part1(&input), 14897079);
     }
