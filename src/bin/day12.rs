@@ -1,6 +1,6 @@
-#[macro_use] extern crate lazy_static;
 use std::str::FromStr;
 use std::vec::Vec;
+use lazy_static::lazy_static;
 use regex::Regex;
 use ya_advent_lib::read::read_input;
 
@@ -114,7 +114,7 @@ impl Ship2 {
     }
 }
 
-fn part1(input: &Vec<Nav>) -> i32 {
+fn part1(input: &[Nav]) -> i32 {
     let mut ship = Ship::new();
     for i in input {
         ship.update(i);
@@ -122,7 +122,7 @@ fn part1(input: &Vec<Nav>) -> i32 {
     ship.x.abs() + ship.y.abs()
 }
 
-fn part2(input: &Vec<Nav>) -> i32 {
+fn part2(input: &[Nav]) -> i32 {
     let mut ship = Ship2::new();
     for i in input {
         ship.update(i);
@@ -131,7 +131,7 @@ fn part2(input: &Vec<Nav>) -> i32 {
 }
 
 fn main() {
-    let input = read_input::<Nav>();
+    let input: Vec<Nav> = read_input();
     println!("Part 1: {}", part1(&input));
     println!("Part 2: {}", part2(&input));
 }

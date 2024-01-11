@@ -1,5 +1,6 @@
 use std::vec::Vec;
 use ya_advent_lib::read::read_input;
+use ya_advent_lib::coords::Coord2D;
 use ya_advent_lib::grid::Grid;
 
 #[derive(Clone, Copy)]
@@ -25,32 +26,26 @@ fn mkgrid(input: &[String]) -> Grid<Seat> {
     Grid::from_input(&input, Seat::Floor, 1)
 }
 
-fn neighbors_immed(x: i64, y: i64, grid: &Grid<Seat>) -> usize {
-    [ (x-1, y-1), (x, y-1), (x+1, y-1),
-      (x-1, y),             (x+1, y),
-      (x-1, y+1), (x, y+1), (x+1, y+1) ]
+fn neighbors_immed(c: Coord2D, grid: &Grid<Seat>) -> usize {
+    c.neighbors8()
         .iter()
-        .map(|(x,y)| grid.get(*x, *y))
-        .filter(|s| match s {
-            Seat::Occupied | Seat::NextEmpty => true,
-            _ => false,
-        })
+        .map(|c| grid.get_c(*c))
+        .filter(|s| matches!(s, Seat::Occupied | Seat::NextEmpty))
         .count()
 }
 
-fn neighbors_los(x: i64, y: i64, grid: &Grid<Seat>) -> usize {
-    [ (-1, -1), (0, -1), (1, -1),
-      (-1, 0),           (1, 0),
-      (-1, 1),  (0, 1),  (1, 1) ]
+fn neighbors_los(c: Coord2D, grid: &Grid<Seat>) -> usize {
+    Coord2D::new(0, 0)
+        .neighbors8()
         .iter()
-        .filter(|(dx, dy)| {
+        .filter(|&&d| {
             let mut ret = false;
             for n in 1.. {
-                if !grid.x_bounds().contains(&(x + dx*n)) ||
-                    !grid.y_bounds().contains(&(y + dy*n)) {
-                        break;
+                let nc = c + d*n;
+                if !grid.contains_coord(nc) {
+                    break;
                 }
-                match grid.get(x + dx*n, y + dy*n) {
+                match grid.get_c(nc) {
                     Seat::Occupied | Seat::NextEmpty => {
                         ret = true;
                         break;
@@ -82,9 +77,9 @@ fn step(grid: &mut Grid<Seat>, part2: bool) -> bool {
                 _ => panic!(),
             };
             let neighbors = if part2 {
-                neighbors_los(x, y, grid)
+                neighbors_los(Coord2D::new(x, y), grid)
             } else {
-                neighbors_immed(x, y, grid)
+                neighbors_immed(Coord2D::new(x, y), grid)
             };
             if neighbors == 0 && !is_occupied {
                 changed = true;
@@ -96,16 +91,11 @@ fn step(grid: &mut Grid<Seat>, part2: bool) -> bool {
         }
     }
     if changed {
-        for y in y_bounds.clone() {
-            for x in x_bounds.clone() {
-                let next = match grid.get(x, y) {
-                    Seat::NextOccupied => Seat::Occupied,
-                    Seat::NextEmpty => Seat::Empty,
-                    _ => { continue; },
-                };
-                grid.set(x, y, next);
-            }
-        }
+        grid.iter_mut().for_each(|c| *c = match *c {
+            Seat::NextOccupied => Seat::Occupied,
+            Seat::NextEmpty => Seat::Empty,
+            n => n,
+        });
     }
 
     changed

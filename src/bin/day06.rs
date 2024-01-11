@@ -1,14 +1,10 @@
 use std::collections::HashMap;
-use std::iter::once;
 use std::vec::Vec;
-use ya_advent_lib::read::read_input;
+use ya_advent_lib::read::read_grouped_input;
 
-fn main() {
-    let input: Vec<String> = read_input::<String>();
-    let mut lineset: Vec<String> = Vec::new();
-    let mut answers: Vec<HashMap<char, usize>> = Vec::new();
-    for line in input.iter().map(|s| s.as_str()).chain(once("")) {
-        if line == "" {
+fn setup(input: Vec<Vec<String>>) -> Vec<HashMap<char, usize>> {
+    input.iter()
+        .map(|lineset| {
             let mut a: HashMap<char, usize> = HashMap::new();
             lineset
                 .join("")
@@ -19,25 +15,39 @@ fn main() {
                     *n += 1;
                 });
             a.insert('_', lineset.len());
-            answers.push(a);
-            lineset.clear();
-        } else {
-            lineset.push(line.to_string());
-        }
-    }
-
-    part1(&answers);
-    part2(&answers);
+            a
+        })
+        .collect()
 }
 
-fn part1(answers: &Vec<HashMap<char, usize>>) {
-    let sum = answers.iter().fold(0, |sum, a| sum + a.len() - 1);
-    println!("Part 1: {}", sum);
+fn part1(answers: &[HashMap<char, usize>]) -> usize {
+    answers.iter().fold(0, |sum, a| sum + a.len() - 1)
 }
-fn part2(answers: &Vec<HashMap<char, usize>>) {
-    let sum = answers.iter().fold(0, |sum, a| {
+
+fn part2(answers: &[HashMap<char, usize>]) -> usize {
+    answers.iter().fold(0, |sum, a| {
         let n = a.get(&'_').unwrap();
         a.values().filter(|v| *v == n).count() - 1 + sum
-    });
-    println!("Part 2: {}", sum);
+    })
+}
+
+fn main() {
+    let input: Vec<Vec<String>> = read_grouped_input();
+    let answers = setup(input);
+    println!("Part 1: {}", part1(&answers));
+    println!("Part 2: {}", part2(&answers));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ya_advent_lib::read::grouped_test_input;
+
+    #[test]
+    fn day06_test() {
+        let input:Vec<Vec<String>> = grouped_test_input(include_str!("day06.testinput"));
+        let answers = setup(input);
+        assert_eq!(part1(&answers), 11);
+        assert_eq!(part2(&answers), 6);
+    }
 }

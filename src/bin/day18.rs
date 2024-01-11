@@ -34,14 +34,14 @@ peg::parser!{
     }
 }
 
-fn part1(input: &Vec<String>) -> u64 {
+fn part1(input: &[String]) -> u64 {
     input
         .iter()
         .map(|row| day18_parse::expression(row).unwrap())
         .sum()
 }
 
-fn part2(input: &Vec<String>) -> u64 {
+fn part2(input: &[String]) -> u64 {
     input
         .iter()
         .map(|row| day18_parse::expression2(row).unwrap())

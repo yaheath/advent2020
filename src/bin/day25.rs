@@ -20,7 +20,7 @@ fn modpow(base: u64, exp: u64, m: u64) -> u64 {
     }
 }
 
-fn part1(input: &Vec<u64>) -> u64 {
+fn part1(input: &[u64]) -> u64 {
     let mut card_loop = 1u64;
     while modpow(7, card_loop, 20201227) != input[0] {
         card_loop += 1;

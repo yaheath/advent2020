@@ -27,7 +27,7 @@ impl <T: Copy> GridND<T> {
         }
     }
 
-    pub fn import_to_plane<F>(&mut self, x_dim: usize, y_dim: usize, input: &Vec<String>, mapfunc: F)
+    pub fn import_to_plane<F>(&mut self, x_dim: usize, y_dim: usize, input: &[String], mapfunc: F)
             where F: Fn(char, &Vec<i64>) -> Option<T> {
         let mut y = 0i64;
         for line in input.iter() {
@@ -44,7 +44,7 @@ impl <T: Copy> GridND<T> {
         }
     }
 
-    pub fn get(&self, coord: &Vec<i64>) -> T {
+    pub fn get(&self, coord: &[i64]) -> T {
         if let Some(cell) = self.data.get(coord) {
             *cell
         }
@@ -53,8 +53,8 @@ impl <T: Copy> GridND<T> {
         }
     }
 
-    pub fn set(&mut self, coord: &Vec<i64>, val: T) {
-        self.data.insert(coord.clone(), val);
+    pub fn set(&mut self, coord: &[i64], val: T) {
+        self.data.insert(coord.to_owned(), val);
         for d in 0..self.dims {
             if self.ranges[d].is_empty() {
                 self.ranges[d].start = coord[d];
@@ -77,7 +77,7 @@ impl <T: Copy> GridND<T> {
         self.data.iter_mut()
     }
 
-    pub fn neighbors<'a>(&'a self, center: &'a Vec<i64>) -> impl Iterator<Item=(T, Vec<i64>)> + '_ {
+    pub fn neighbors<'a>(&'a self, center: &'a [i64]) -> impl Iterator<Item=(T, Vec<i64>)> + '_ {
         let ranges = vec![-1 .. 2; self.dims];
         ranges
             .into_iter()
@@ -103,7 +103,7 @@ enum Cell {
     NextActive,
 }
 
-fn mkgrid(input: &Vec<String>, dims: usize) -> GridND<Cell> {
+fn mkgrid(input: &[String], dims: usize) -> GridND<Cell> {
     let mut grid = GridND::new(dims, Cell::Inactive);
     grid.import_to_plane(0, 1, input, |c,_| match c {
         '.' => None,
@@ -140,7 +140,7 @@ fn step(grid: &mut GridND<Cell>) {
     });
 }
 
-fn part1(input: &Vec<String>) -> usize {
+fn part1(input: &[String]) -> usize {
     let mut grid = mkgrid(input, 3);
     for _ in 0..6 {
         step(&mut grid);
@@ -150,7 +150,7 @@ fn part1(input: &Vec<String>) -> usize {
         .count()
 }
 
-fn part2(input: &Vec<String>) -> usize {
+fn part2(input: &[String]) -> usize {
     let mut grid = mkgrid(input, 4);
     for _ in 0..6 {
         step(&mut grid);

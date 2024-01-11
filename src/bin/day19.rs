@@ -35,7 +35,7 @@ impl FromStr for RuleEntry {
     }
 }
 
-fn parse_rules(input: &Vec<String>) -> HashMap<RuleNum, Rule> {
+fn parse_rules(input: &[String]) -> HashMap<RuleNum, Rule> {
     input
         .iter()
         .map(|line| line.parse::<RuleEntry>().unwrap())
@@ -43,7 +43,7 @@ fn parse_rules(input: &Vec<String>) -> HashMap<RuleNum, Rule> {
         .collect()
 }
 
-fn process_seq<'a>(s: &'a str, seq: &Vec<RuleNum>, rules: &HashMap<RuleNum, Rule>) -> Vec<&'a str> {
+fn process_seq<'a>(s: &'a str, seq: &[RuleNum], rules: &HashMap<RuleNum, Rule>) -> Vec<&'a str> {
     seq.iter()
         .try_fold(vec![s], |solutions, rule_num| {
             let next_solutions: Vec<&str> = solutions
@@ -98,4 +98,21 @@ fn main() {
     let rules = parse_rules(&input[0]);
     println!("Part 1: {}", part1(&rules, &input[1]));
     println!("Part 2: {}", part2(&rules, &input[1]));
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ya_advent_lib::read::grouped_test_input;
+
+    #[test]
+    fn day19_test() {
+        let input = grouped_test_input::<String>(include_str!("day19.testinput"));
+        let rules = parse_rules(&input[0]);
+        assert_eq!(part1(&rules, &input[1]), 2);
+        let input = grouped_test_input::<String>(include_str!("day19.testinput2"));
+        let rules = parse_rules(&input[0]);
+        assert_eq!(part2(&rules, &input[1]), 12);
+    }
 }

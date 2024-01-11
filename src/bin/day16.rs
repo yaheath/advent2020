@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::ops::Range;
 use std::vec::Vec;
 use std::str::FromStr;
@@ -46,7 +46,7 @@ struct Input {
     tickets: Vec<Ticket>,
 }
 
-fn setup(input: &Vec<Vec<String>>) -> Input {
+fn setup(input: &[Vec<String>]) -> Input {
     let rules = input[0].iter().map(|s| s.parse::<Rule>().unwrap()).collect();
     let my_ticket = input[1][1].parse::<Ticket>().unwrap();
     let tickets = input[2].iter().skip(1).map(|s| s.parse::<Ticket>().unwrap()).collect();
@@ -70,7 +70,7 @@ fn part1(input: &Input) -> u64 {
         .sum()
 }
 
-fn part2(input: &Input) -> u64 {
+fn find_ticket_values(input: &Input) -> HashMap<&String, u64> {
     let valid_ranges: Vec<Range<u64>> = input.rules
         .iter()
         .flat_map(|rule| rule.valid.iter())
@@ -127,9 +127,14 @@ fn part2(input: &Input) -> u64 {
         eliminated.insert(n);
     }
     assert!(matches.iter().all(|(_, v)| v.len() == 1));
-    matches.iter()
+    matches.into_iter().map(|(k, v)| (k, input.my_ticket.vals[v[0]])).collect()
+}
+
+fn part2(input: &Input) -> u64 {
+    find_ticket_values(input)
+        .iter()
         .filter(|(n,_)| n.starts_with("departure"))
-        .map(|(_,v)| input.my_ticket.vals[v[0]])
+        .map(|(_,v)| v)
         .product()
 }
 
@@ -140,3 +145,25 @@ fn main() {
     println!("Part 2: {}", part2(&input));
 }
 
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ya_advent_lib::read::grouped_test_input;
+
+    #[test]
+    fn day16_test() {
+        let input = grouped_test_input::<String>(include_str!("day16.testinput"));
+        let input = setup(&input);
+        assert_eq!(part1(&input), 71);
+
+        let input = grouped_test_input::<String>(include_str!("day16.testinput2"));
+        let input = setup(&input);
+        let m = find_ticket_values(&input);
+        assert_eq!(m, HashMap::from_iter([
+                (&"class".to_string(), 12),
+                (&"row".to_string(), 11),
+                (&"seat".to_string(), 13),
+        ]));
+    }
+}

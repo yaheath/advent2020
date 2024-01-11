@@ -4,7 +4,7 @@ use itertools::Itertools;
 use ya_advent_lib::read::read_input;
 
 #[allow(dead_code)]
-fn dbg_print(cups: &Vec<usize>) {
+fn dbg_print(cups: &[usize]) {
     let mut c: usize = 1;
     while cups[c-1] != 1 {
         print!("{} ", ((c as u8) + b'0') as char);
@@ -33,7 +33,7 @@ fn do_move(current: usize, cups: &mut Vec<usize>) -> usize {
     next
 }
 
-fn populate_initial(seq: Vec<usize>, cups: &mut Vec<usize>, extra: Range<usize>) -> usize{
+fn populate_initial(seq: &[usize], cups: &mut Vec<usize>, extra: Range<usize>) -> usize{
     let start = seq[0];
     let mut last = 0;
     assert_eq!(cups.len(), seq.len());
@@ -53,12 +53,12 @@ fn populate_initial(seq: Vec<usize>, cups: &mut Vec<usize>, extra: Range<usize>)
     start
 }
 
-fn part1(input: &String) -> String {
+fn part1(input: &str) -> String {
     let mut cups:Vec<usize> = vec![0; input.chars().count()];
     let initial_seq = input.chars()
         .map(|c| ((c as u8) - b'0') as usize)
         .collect::<Vec<_>>();
-    let mut current = populate_initial(initial_seq, &mut cups, 0..0);
+    let mut current = populate_initial(&initial_seq, &mut cups, 0..0);
     for _i in 0..100 {
         current = do_move(current, &mut cups);
         // if _i < 10 {
@@ -74,7 +74,7 @@ fn part1(input: &String) -> String {
     out
 }
 
-fn part2(input: &String) -> usize {
+fn part2(input: &str) -> usize {
     let mut cups:Vec<usize> = Vec::with_capacity(1_000_000);
     for _ in input.chars() {
         cups.push(0);
@@ -83,7 +83,7 @@ fn part2(input: &String) -> usize {
         .map(|c| ((c as u8) - b'0') as usize)
         .collect::<Vec<_>>();
     let extra = initial_seq.len() + 1 .. 1_000_001;
-    let mut current = populate_initial(initial_seq, &mut cups, extra);
+    let mut current = populate_initial(&initial_seq, &mut cups, extra);
     for _ in 0..10_000_000 {
         current = do_move(current, &mut cups);
     }

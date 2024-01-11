@@ -1,7 +1,7 @@
 use std::vec::Vec;
 use ya_advent_lib::read::read_input;
 
-fn part1(input: &Vec<String>) -> usize {
+fn part1(input: &[String]) -> usize {
     let ts = input[0].parse::<usize>().unwrap();
     let buses = input[1]
         .split(',')
@@ -14,7 +14,7 @@ fn part1(input: &Vec<String>) -> usize {
     times[0].0 * times[0].1
 }
 
-fn part2(input: &Vec<String>) -> usize {
+fn part2(input: &[String]) -> usize {
     let mut buses = input[1]
         .split(',')
         .enumerate()

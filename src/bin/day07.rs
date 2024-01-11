@@ -1,9 +1,8 @@
-#[macro_use] extern crate lazy_static;
 use regex::Regex;
-use std::cell::RefCell;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::str::FromStr;
+use lazy_static::lazy_static;
 use ya_advent_lib::read::read_input;
 
 struct BagRule {
@@ -12,7 +11,7 @@ struct BagRule {
 }
 
 impl FromStr for BagRule {
-    type Err = String;
+    type Err = ();
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         lazy_static! {
             static ref RE: Regex = Regex::new(r"^(\w+ \w+) bags? contain (.*)$").unwrap();
@@ -32,7 +31,7 @@ impl FromStr for BagRule {
             Ok(BagRule {color: color, contains: contains})
         }
         else {
-            Err(format!("invalid input: {}", s))
+            Err(())
         }
     }
 }
@@ -40,21 +39,18 @@ impl FromStr for BagRule {
 struct BagTreeNode {
     contains: HashMap<String, usize>,
     contained_by: HashSet<String>,
-    bag_count: RefCell<usize>,
 }
 impl BagTreeNode {
     fn new() -> Self {
-        BagTreeNode { contained_by: HashSet::new(), contains: HashMap::new(), bag_count: RefCell::new(0) }
+        BagTreeNode { contained_by: HashSet::new(), contains: HashMap::new() }
     }
     fn iter(&self) -> std::collections::hash_set::Iter<String> {
         self.contained_by.iter()
     }
 }
 
-fn main() {
-    let input = read_input::<BagRule>();
+fn setup(input: &[BagRule]) -> HashMap<String, BagTreeNode> {
     let mut bag_tree: HashMap<String, BagTreeNode> = HashMap::new();
-
     for br in input {
         for (key, _) in br.contains.iter() {
             let entry = bag_tree.entry(key.to_string()).or_insert(BagTreeNode::new());
@@ -65,13 +61,7 @@ fn main() {
             bag_entry.contains.insert(key.to_string(), *val);
         }
     }
-
-    let mut traversed: HashSet<String> = HashSet::new();
-    traverse_up(&bag_tree, "shiny gold".to_string(), &mut traversed);
-    println!("Part 1: {}", traversed.len() - 1);
-
-    traverse_down(&bag_tree, "shiny gold".to_string());
-    println!("Part 2: {}", *(bag_tree.get(&"shiny gold".to_string()).unwrap().bag_count.borrow()) - 1);
+    bag_tree
 }
 
 fn traverse_up(bag_tree: &HashMap<String, BagTreeNode>, color: String, traversed: &mut HashSet<String>) {
@@ -84,14 +74,52 @@ fn traverse_up(bag_tree: &HashMap<String, BagTreeNode>, color: String, traversed
     }
 }
 
-fn traverse_down(bag_tree: &HashMap<String, BagTreeNode>, color: String) {
+fn traverse_down(bag_tree: &HashMap<String, BagTreeNode>, color: String, bag_counts: &mut HashMap<String, usize>) {
     let node = bag_tree.get(&color.to_string()).unwrap();
     let mut sum = 1;
     for (key, val) in node.contains.iter() {
-        if *(bag_tree.get(key).unwrap().bag_count.borrow()) == 0 {
-            traverse_down(bag_tree, key.to_string());
+        let c = bag_counts.get(key).unwrap_or(&0);
+        if *c == 0 {
+            traverse_down(bag_tree, key.to_string(), bag_counts);
         }
-        sum += *(bag_tree.get(key).unwrap().bag_count.borrow()) * val;
+        let c = bag_counts.get(key).unwrap_or(&0);
+        sum += *c * val;
     }
-    *(node.bag_count.borrow_mut()) = sum;
+    bag_counts.entry(color.to_string())
+        .and_modify(|v| *v = sum)
+        .or_insert(sum);
+}
+
+fn part1(bag_tree: &HashMap<String, BagTreeNode>) -> usize {
+    let mut traversed: HashSet<String> = HashSet::new();
+    traverse_up(&bag_tree, "shiny gold".to_string(), &mut traversed);
+    traversed.len() - 1
+}
+
+fn part2(bag_tree: &HashMap<String, BagTreeNode>) -> usize {
+    let mut bag_counts: HashMap<String, usize> = HashMap::new();
+    traverse_down(bag_tree, "shiny gold".to_string(), &mut bag_counts);
+    *(bag_counts.get(&"shiny gold".to_string()).unwrap()) - 1
+}
+
+fn main() {
+    let input = read_input::<BagRule>();
+    let bag_tree = setup(&input);
+
+    println!("Part 1: {}", part1(&bag_tree));
+    println!("Part 2: {}", part2(&bag_tree));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ya_advent_lib::read::test_input;
+
+    #[test]
+    fn day07_test() {
+        let input:Vec<BagRule> = test_input(include_str!("day07.testinput"));
+        let bag_tree = setup(&input);
+        assert_eq!(part1(&bag_tree), 4);
+        assert_eq!(part2(&bag_tree), 32);
+    }
 }

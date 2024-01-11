@@ -2,8 +2,8 @@ use std::collections::HashMap;
 use std::vec::Vec;
 use ya_advent_lib::read::read_input;
 
-fn part1(input: &Vec<i64>) -> i64 {
-    let mut list = input.clone();
+fn part1(input: &[i64]) -> i64 {
+    let mut list = input.to_owned();
     let mut hist: HashMap<i64,i64> = HashMap::new();
 
     list.push(0);
@@ -33,8 +33,8 @@ fn rsearch(slice: &[i64]) -> usize {
     sum
 }
 
-fn part2(input: &Vec<i64>) -> usize {
-    let mut list = input.clone();
+fn part2(input: &[i64]) -> usize {
+    let mut list = input.to_owned();
     list.push(0);
     list.sort_unstable();
     list.push(list[list.len() - 1] + 3);

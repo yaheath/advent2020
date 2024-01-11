@@ -85,7 +85,7 @@ fn apply_moves(grid: &mut InfiniteGrid<Tile>, move_set: &MoveSet) {
     });
 }
 
-fn part1(input: &Vec<MoveSet>) -> usize {
+fn part1(input: &[MoveSet]) -> usize {
     let mut grid: InfiniteGrid<Tile> = InfiniteGrid::new(Tile::White);
     for i in input {
         apply_moves(&mut grid, &i);
@@ -131,7 +131,7 @@ fn step(grid: &mut InfiniteGrid<Tile>) {
     });
 }
 
-fn part2(input: &Vec<MoveSet>) -> usize {
+fn part2(input: &[MoveSet]) -> usize {
     let mut grid: InfiniteGrid<Tile> = InfiniteGrid::new(Tile::White);
     for i in input {
         apply_moves(&mut grid, &i);

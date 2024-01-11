@@ -20,7 +20,7 @@ impl FromStr for Food {
     }
 }
 
-fn bothparts(input: &Vec<Food>) -> (usize, String) {
+fn bothparts(input: &[Food]) -> (usize, String) {
     let mut allergen_map:HashMap<String, HashSet<String>> = HashMap::new();
     let mut all_ingredients:Vec<String> = Vec::new();
     for food in input {

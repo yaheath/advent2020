@@ -32,7 +32,7 @@ impl FromStr for Instruction {
             }
         }
         else {
-            Err(format!("invalid input: {s}"))
+            Err(format!("invalid input"))
         }
     }
 }
@@ -66,7 +66,7 @@ impl<'a> VM<'a> {
         match inst{
             Instruction::Nop(_) => {},
             Instruction::Acc(arg) => {self.acc += arg;},
-            Instruction::Jmp(arg) => {self.pc = (self.pc as isize + arg - 1) as usize;},
+            Instruction::Jmp(arg) => {self.pc = (self.pc as isize + arg - 1).max(0) as usize;},
         }
         self.pc += 1;
         if self.pc >= self.program.len() {
@@ -74,12 +74,6 @@ impl<'a> VM<'a> {
         }
         RunResult::Ok
     }
-}
-
-fn main() {
-    let input = read_input::<Instruction>();
-    part1(&input);
-    part2(&input);
 }
 
 fn run(program: &Vec<Instruction>) -> RunResult {
@@ -98,15 +92,14 @@ fn run(program: &Vec<Instruction>) -> RunResult {
     }
 }
 
-fn part1(input: &Vec<Instruction>) {
-    let acc = match run(input) {
+fn part1(input: &Vec<Instruction>) -> isize {
+    match run(input) {
         RunResult::Loop(a) => a,
         _ => panic!(),
-    };
-    println!("Part 1: {acc}");
+    }
 }
 
-fn part2(input: &Vec<Instruction>) {
+fn part2(input: &Vec<Instruction>) -> isize {
     for (idx, inst) in input.iter().enumerate() {
         let replace = match inst {
             Instruction::Nop(a) => Instruction::Jmp(*a),
@@ -117,13 +110,32 @@ fn part2(input: &Vec<Instruction>) {
         program[idx] = replace;
         match run(&program) {
             RunResult::Halt(a) => {
-                println!("Part 2: {a}");
-                return;
+                return a;
             },
             RunResult::Loop(_) => {
                 continue;
             },
             _ => panic!(),
         }
+    }
+    panic!();
+}
+
+fn main() {
+    let input = read_input::<Instruction>();
+    println!("Part 1: {}", part1(&input));
+    println!("Part 2: {}", part2(&input));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ya_advent_lib::read::test_input;
+
+    #[test]
+    fn day08_test() {
+        let input:Vec<Instruction> = test_input(include_str!("day08.testinput"));
+        assert_eq!(part1(&input), 5);
+        assert_eq!(part2(&input), 8);
     }
 }

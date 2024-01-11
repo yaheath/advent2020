@@ -96,7 +96,7 @@ impl VM {
     }
 }
 
-fn part1(input: &Vec<Instruction>) -> u64 {
+fn part1(input: &[Instruction]) -> u64 {
     let mut vm = VM::new();
     for i in input {
         vm.process(i);
@@ -106,7 +106,7 @@ fn part1(input: &Vec<Instruction>) -> u64 {
         .sum()
 }
 
-fn part2(input: &Vec<Instruction>) -> u64 {
+fn part2(input: &[Instruction]) -> u64 {
     let mut vm = VM::new();
     for i in input {
         vm.process_v2(i);

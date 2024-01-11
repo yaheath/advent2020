@@ -51,7 +51,7 @@ fn recursive_game(mut p1deck: VecDeque<usize>, mut p2deck: VecDeque<usize>) -> (
     }
 }
 
-fn part1(input: &Vec<Vec<String>>) -> usize {
+fn part1(input: &[Vec<String>]) -> usize {
     let mut p1deck: VecDeque<usize> = input[0].iter()
         .skip(1).map(|l| l.parse::<usize>().unwrap()).collect();
     let mut p2deck: VecDeque<usize> = input[1].iter()
@@ -81,7 +81,7 @@ fn part1(input: &Vec<Vec<String>>) -> usize {
         .sum()
 }
 
-fn part2(input: &Vec<Vec<String>>) -> usize {
+fn part2(input: &[Vec<String>]) -> usize {
     let p1deck: VecDeque<usize> = input[0].iter()
         .skip(1).map(|l| l.parse::<usize>().unwrap()).collect();
     let p2deck: VecDeque<usize> = input[1].iter()

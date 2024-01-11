@@ -118,7 +118,7 @@ fn mktiles(input: Vec<Vec<String>>) -> Vec<Tile> {
         .collect()
 }
 
-fn part1(tiles: &Vec<Tile>) -> u64 {
+fn part1(tiles: &[Tile]) -> u64 {
     let mut matches: HashMap<u64, usize> = HashMap::new();
     for a in 0 .. tiles.len() {
         for b in a+1 .. tiles.len() {
@@ -143,7 +143,7 @@ struct TilePos {
     tile: Tile,
 }
 
-fn arrange(tiles: &Vec<Tile>) -> Grid<bool> {
+fn arrange(tiles: &[Tile]) -> Grid<bool> {
     let mut found: HashMap<u64, TilePos> = HashMap::with_capacity(tiles.len());
     found.insert(tiles[0].id, TilePos { x:0, y:0, tile: tiles[0].rotate(Orient::Orig) });
     let mut queue: VecDeque<u64> = VecDeque::new();
@@ -291,7 +291,7 @@ impl Monster {
     }
 }
 
-fn part2(tiles: &Vec<Tile>) -> usize {
+fn part2(tiles: &[Tile]) -> usize {
     let grid = arrange(tiles);
     //dump_grid(&grid);
     for o in [Orient::Orig, Orient::Rot90, Orient::Rot180, Orient::Rot270,

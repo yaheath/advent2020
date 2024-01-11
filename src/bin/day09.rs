@@ -1,17 +1,16 @@
-use std::vec::Vec;
 use itertools::Itertools;
 use ya_advent_lib::read::read_input;
 
-fn part1(input: &Vec<i64>) -> i64 {
+fn first_invalid(input: &[i64], preamble_len: usize) -> i64 {
     input
-        .windows(26)
+        .windows(preamble_len + 1)
         .flat_map(|w| {
             let mut sums = w.iter()
-                .take(25)
+                .take(preamble_len)
                 .tuple_combinations()
                 .filter(|(a,b)| a != b)
                 .map(|(a,b)| a + b);
-            let m:i64 = w[25];
+            let m:i64 = w[preamble_len];
             if !sums.any(|s| s == m) {
                 Some(m)
             } else {
@@ -22,8 +21,12 @@ fn part1(input: &Vec<i64>) -> i64 {
         .unwrap()
 }
 
-fn part2(input: &Vec<i64>) -> i64 {
-    let target = part1(input);
+fn part1(input: &[i64], preamble_len: usize) -> i64 {
+    first_invalid(input, preamble_len)
+}
+
+fn part2(input: &[i64], preamble_len: usize) -> i64 {
+    let target = first_invalid(input, preamble_len);
 
     for start in 0..input.len() {
         let mut sum = 0i64;
@@ -44,6 +47,19 @@ fn part2(input: &Vec<i64>) -> i64 {
 
 fn main() {
     let input = read_input::<i64>();
-    println!("Part 1: {}", part1(&input));
-    println!("Part 2: {}", part2(&input));
+    println!("Part 1: {}", part1(&input, 25));
+    println!("Part 2: {}", part2(&input, 25));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ya_advent_lib::read::test_input;
+
+    #[test]
+    fn day09_test() {
+        let input = test_input::<i64>(include_str!("day09.testinput"));
+        assert_eq!(part1(&input, 5), 127);
+        assert_eq!(part2(&input, 5), 62);
+    }
 }
