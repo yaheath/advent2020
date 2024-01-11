@@ -50,9 +50,9 @@ struct Tile {
 }
 
 impl Tile {
-    fn new(input: &Vec<String>) -> Self {
+    fn new(input: &[String]) -> Self {
         let id = input[0]
-            .split(' ').skip(1).next().unwrap()
+            .split(' ').nth(1).unwrap()
             .split(':').next().unwrap()
             .parse::<u64>().unwrap();
         let data:Vec<String> = input.iter().skip(1).cloned().collect();
@@ -114,7 +114,7 @@ impl Tile {
 fn mktiles(input: Vec<Vec<String>>) -> Vec<Tile> {
     input
         .iter()
-        .map(|t| Tile::new(t))
+        .map(|i| Tile::new(i))
         .collect()
 }
 
@@ -264,10 +264,7 @@ impl Monster {
           (0, 1), (5, 1), (6, 1), (11, 1), (12, 1), (17, 1), (18, 1), (19, 1),
           (1, 2), (4, 2), (7, 2), (10, 2), (13, 2), (16, 2)
         ];
-        let r90 = match orient {
-            Orient::Rot90 | Orient::Rot270 | Orient::Rot90Flip | Orient::Rot270Flip => true,
-            _ => false,
-        };
+        let r90 = matches!(orient, Orient::Rot90 | Orient::Rot270 | Orient::Rot90Flip | Orient::Rot270Flip);
         Self {
             coords: coords.iter().map(|(x, y)| orient.map(*x, *y, 20, 3)).collect(),
             width: if r90 { 3 } else { 20 },
@@ -298,7 +295,7 @@ fn part2(tiles: &[Tile]) -> usize {
               Orient::Flip, Orient::Rot90Flip, Orient::Rot180Flip, Orient::Rot270Flip] {
         let m = Monster::new(o);
         let matches = m.find_in_grid(&grid);
-        if matches.len() > 0 {
+        if !matches.is_empty() {
             let monsterlocs:HashSet<(i64,i64)> = matches.iter()
                 .flat_map(|(mx, my)| m.coords.iter().map(move |(cx, cy)| (*mx+*cx, *my+*cy)))
                 .collect();

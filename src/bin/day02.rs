@@ -38,13 +38,13 @@ impl FromStr for Pass {
             static ref RE: Regex = Regex::new(r"^(\d+)-(\d+) (\w): (\w+)").unwrap();
         }
         match RE.captures(s) {
-            None => return Err(format!("invalid input: {}", s)),
+            None => Err(format!("invalid input: {}", s)),
             Some(caps) => {
                 let min:usize = caps.get(1).unwrap().as_str().parse::<usize>().unwrap();
                 let max:usize = caps.get(2).unwrap().as_str().parse::<usize>().unwrap();
                 let c:char = caps.get(3).unwrap().as_str().chars().next().unwrap();
                 let pass:String = caps.get(4).unwrap().as_str().to_string();
-                return Ok(Pass {min: min, max: max, c: c, pass: pass});
+                Ok(Pass {min, max, c, pass})
             },
         }
     }

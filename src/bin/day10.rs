@@ -20,7 +20,7 @@ fn part1(input: &[i64]) -> i64 {
 
 fn rsearch(slice: &[i64]) -> usize {
     let mut sum = 0;
-    if slice.len() == 0 { return 0; }
+    if slice.is_empty() { return 0; }
     if slice.len() == 1 { return 1; }
     if slice[1] - slice[0] >= 3 { panic!(); }
     sum += rsearch(&slice[1..]);

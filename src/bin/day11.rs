@@ -23,7 +23,7 @@ impl From<char> for Seat {
 }
 
 fn mkgrid(input: &[String]) -> Grid<Seat> {
-    Grid::from_input(&input, Seat::Floor, 1)
+    Grid::from_input(input, Seat::Floor, 1)
 }
 
 fn neighbors_immed(c: Coord2D, grid: &Grid<Seat>) -> usize {

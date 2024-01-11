@@ -76,9 +76,8 @@ fn part1(input: &str) -> String {
 
 fn part2(input: &str) -> usize {
     let mut cups:Vec<usize> = Vec::with_capacity(1_000_000);
-    for _ in input.chars() {
-        cups.push(0);
-    }
+    cups.resize(input.len(), 0);
+
     let initial_seq = input.chars()
         .map(|c| ((c as u8) - b'0') as usize)
         .collect::<Vec<_>>();

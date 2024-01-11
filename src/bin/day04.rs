@@ -31,7 +31,7 @@ impl Passport {
             match key.as_str() {
                 "byr" => {
                     if let Ok(v) = i32::from_str(val) {
-                        if v < 1920 || v > 2002 {
+                        if !(1920..=2002).contains(&v) {
                             return false;
                         }
                     } else {
@@ -40,7 +40,7 @@ impl Passport {
                 },
                 "iyr" => {
                     if let Ok(v) = i32::from_str(val) {
-                        if v < 2010 || v > 2020 {
+                        if !(2010..=2020).contains(&v) {
                             return false;
                         }
                     } else {
@@ -49,7 +49,7 @@ impl Passport {
                 },
                 "eyr" => {
                     if let Ok(v) = i32::from_str(val) {
-                        if v < 2020 || v > 2030 {
+                        if !(2020..=2030).contains(&v) {
                             return false;
                         }
                     } else {
@@ -64,13 +64,11 @@ impl Passport {
                         let n = cap.get(1).unwrap().as_str().parse::<i32>().unwrap();
                         let u = cap.get(2).unwrap().as_str();
                         if u == "in" {
-                            if n < 59 || n > 76 {
+                            if !(59..=76).contains(&n) {
                                 return false;
                             }
-                        } else {
-                            if n < 150 || n > 193 {
-                                return false;
-                            }
+                        } else if !(150..=193).contains(&n) {
+                            return false;
                         }
                     } else {
                         return false;
@@ -119,7 +117,7 @@ impl FromStr for Passport {
             let val:String = cap.get(2).unwrap().as_str().to_string();
             map.insert(key, val);
         }
-        if map.len() > 0 {
+        if !map.is_empty() {
             Ok(Passport {data: map})
         }
         else {
@@ -166,7 +164,7 @@ mod tests {
 "hgt:59cm ecl:zzz eyr:2038 hcl:74454a iyr:2023 pid:3556412378 byr:2007",
         ] {
             let p = i.parse::<Passport>().unwrap();
-            assert_eq!(p.is_valid_2(), false);
+            assert!(!p.is_valid_2());
         }
 
         for i in [
@@ -176,7 +174,7 @@ mod tests {
 "iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719",
         ] {
             let p = i.parse::<Passport>().unwrap();
-            assert_eq!(p.is_valid_2(), true);
+            assert!(p.is_valid_2());
         }
     }
 }

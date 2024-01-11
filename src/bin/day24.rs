@@ -88,7 +88,7 @@ fn apply_moves(grid: &mut InfiniteGrid<Tile>, move_set: &MoveSet) {
 fn part1(input: &[MoveSet]) -> usize {
     let mut grid: InfiniteGrid<Tile> = InfiniteGrid::new(Tile::White);
     for i in input {
-        apply_moves(&mut grid, &i);
+        apply_moves(&mut grid, i);
     }
     grid.iter().filter(|(_, &t)| matches!(t, Tile::Black)).count()
 }
@@ -102,10 +102,7 @@ fn step(grid: &mut InfiniteGrid<Tile>) {
                 .iter()
                 .filter(|&&d| {
                     let (nx, ny) = neighbor(x, y, d);
-                    match grid.get(nx, ny) {
-                        Tile::Black | Tile::NextWhite => true,
-                        _ => false
-                    }
+                    matches!(grid.get(nx, ny), Tile::Black | Tile::NextWhite)
                 })
                 .count();
             let c = grid.get(x, y);
@@ -134,7 +131,7 @@ fn step(grid: &mut InfiniteGrid<Tile>) {
 fn part2(input: &[MoveSet]) -> usize {
     let mut grid: InfiniteGrid<Tile> = InfiniteGrid::new(Tile::White);
     for i in input {
-        apply_moves(&mut grid, &i);
+        apply_moves(&mut grid, i);
     }
     for _ in 0..100 {
         step(&mut grid);

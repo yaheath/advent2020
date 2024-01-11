@@ -29,10 +29,10 @@ impl <T: Copy> GridND<T> {
 
     pub fn import_to_plane<F>(&mut self, x_dim: usize, y_dim: usize, input: &[String], mapfunc: F)
             where F: Fn(char, &Vec<i64>) -> Option<T> {
-        let mut y = 0i64;
-        for line in input.iter() {
+        for (uy, line) in input.iter().enumerate() {
             for (ux, c) in line.chars().enumerate() {
                 let x = ux as i64;
+                let y = uy as i64;
                 let mut coord = vec![0; self.dims];
                 coord[x_dim] = x;
                 coord[y_dim] = y;
@@ -40,7 +40,6 @@ impl <T: Copy> GridND<T> {
                     self.set(&coord, val);
                 }
             }
-            y += 1;
         }
     }
 
@@ -55,16 +54,16 @@ impl <T: Copy> GridND<T> {
 
     pub fn set(&mut self, coord: &[i64], val: T) {
         self.data.insert(coord.to_owned(), val);
-        for d in 0..self.dims {
-            if self.ranges[d].is_empty() {
-                self.ranges[d].start = coord[d];
-                self.ranges[d].end = coord[d] + 1;
+        for (range, c) in self.ranges.iter_mut().zip(coord) {
+            if range.is_empty() {
+                range.start = *c;
+                range.end = *c + 1;
             }
-            else if coord[d] < self.ranges[d].start {
-                self.ranges[d].start = coord[d];
+            else if *c < range.start {
+                range.start = *c;
             }
-            else if coord[d] >= self.ranges[d].end {
-                self.ranges[d].end = coord[d] + 1;
+            else if *c >= range.end {
+                range.end = *c + 1;
             }
         }
     }
@@ -115,13 +114,10 @@ fn mkgrid(input: &[String], dims: usize) -> GridND<Cell> {
 
 fn step(grid: &mut GridND<Cell>) {
     for coord in grid.ranges.iter()
-            .map(|r| ((r.start - 1) .. (r.end + 1)).into_iter())
+            .map(|r| ((r.start - 1) .. (r.end + 1)))
             .multi_cartesian_product() {
         let n = grid.neighbors(&coord)
-            .filter(|(c,_)| match c {
-                Cell::Active | Cell::NextInactive => true,
-                _ => false,
-            })
+            .filter(|(c,_)| matches!(c, Cell::Active | Cell::NextInactive))
             .count();
         match grid.get(&coord) {
             Cell::Inactive if n == 3 => {

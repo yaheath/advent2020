@@ -32,7 +32,7 @@ impl FromStr for Instruction {
             }
         }
         else {
-            Err(format!("invalid input"))
+            Err("invalid input".to_string())
         }
     }
 }
@@ -46,16 +46,16 @@ enum RunResult {
 struct VM<'a> {
     acc: isize,
     pc: usize,
-    program: &'a Vec<Instruction>,
+    program: &'a [Instruction],
     inst_counter: Vec<usize>,
 }
 impl<'a> VM<'a> {
-    fn new(program: &'a Vec<Instruction>) -> Self {
+    fn new(program: &'a [Instruction]) -> Self {
         let len = program.len();
         VM {
             acc: 0,
             pc: 0,
-            program: program,
+            program,
             inst_counter: vec![0; len],
         }
     }
@@ -76,7 +76,7 @@ impl<'a> VM<'a> {
     }
 }
 
-fn run(program: &Vec<Instruction>) -> RunResult {
+fn run(program: &[Instruction]) -> RunResult {
     let mut vm = VM::new(program);
     loop {
         match vm.exec() {
@@ -92,21 +92,21 @@ fn run(program: &Vec<Instruction>) -> RunResult {
     }
 }
 
-fn part1(input: &Vec<Instruction>) -> isize {
+fn part1(input: &[Instruction]) -> isize {
     match run(input) {
         RunResult::Loop(a) => a,
         _ => panic!(),
     }
 }
 
-fn part2(input: &Vec<Instruction>) -> isize {
+fn part2(input: &[Instruction]) -> isize {
     for (idx, inst) in input.iter().enumerate() {
         let replace = match inst {
             Instruction::Nop(a) => Instruction::Jmp(*a),
             Instruction::Jmp(a) => Instruction::Nop(*a),
             Instruction::Acc(_) => {continue;},
         };
-        let mut program: Vec<Instruction> = input.clone();
+        let mut program: Vec<Instruction> = input.to_owned();
         program[idx] = replace;
         match run(&program) {
             RunResult::Halt(a) => {

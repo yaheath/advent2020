@@ -13,17 +13,19 @@ fn recursive_game(mut p1deck: VecDeque<usize>, mut p2deck: VecDeque<usize>) -> (
     loop {
         let card1 = p1deck.pop_front().unwrap();
         let card2 = p2deck.pop_front().unwrap();
-        let winner;
 
-        if card1 <= p1deck.len() && card2 <= p2deck.len() {
+        let winner = if card1 <= p1deck.len() && card2 <= p2deck.len() {
             let newp1deck = p1deck.iter().take(card1).cloned().collect();
             let newp2deck = p2deck.iter().take(card2).cloned().collect();
             let result = recursive_game(newp1deck, newp2deck);
-            winner = result.0;
+            result.0
+        }
+        else if card1 > card2 {
+            Winner::P1
         }
         else {
-            winner = if card1 > card2 {Winner::P1} else {Winner::P2};
-        }
+            Winner::P2
+        };
 
         match winner {
             Winner::P1 => {
@@ -36,10 +38,10 @@ fn recursive_game(mut p1deck: VecDeque<usize>, mut p2deck: VecDeque<usize>) -> (
             },
         }
 
-        if p1deck.len() == 0 {
+        if p1deck.is_empty() {
             return (Winner::P2, p2deck);
         }
-        if p2deck.len() == 0 {
+        if p2deck.is_empty() {
             return (Winner::P1, p1deck);
         }
 
@@ -67,11 +69,11 @@ fn part1(input: &[Vec<String>]) -> usize {
             p2deck.push_back(card2);
             p2deck.push_back(card1);
         }
-        if p1deck.len() == 0 {
+        if p1deck.is_empty() {
             winner = p2deck;
             break;
         }
-        if p2deck.len() == 0 {
+        if p2deck.is_empty() {
             winner = p1deck;
             break;
         }

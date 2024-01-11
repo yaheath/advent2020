@@ -14,9 +14,9 @@ struct Mask {
 impl FromStr for Mask {
     type Err = ParseIntError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let or_str = s.replace("X", &"0");
-        let and_str = "1".repeat(28) + &s.replace("X", &"1");
-        let float_str = s.replace("1", &"0").replace("X", &"1");
+        let or_str = s.replace('X', "0");
+        let and_str = "1".repeat(28) + &s.replace('X', "1");
+        let float_str = s.replace('1', "0").replace('X', "1");
         Ok(Mask {
             or: u64::from_str_radix(&or_str, 2)?,
             and: u64::from_str_radix(&and_str, 2)?,
@@ -35,7 +35,7 @@ impl FromStr for Instruction {
     type Err = ();
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         if s.starts_with("mask") {
-            let bstr = s.split(" = ").skip(1).next().unwrap();
+            let bstr = s.split(" = ").nth(1).unwrap();
             Ok(Instruction::SetMask(
                 bstr.parse::<Mask>().unwrap()
             ))
@@ -43,7 +43,7 @@ impl FromStr for Instruction {
         else {
             let mut si = s.split("] = ");
             Ok(Instruction::SetMem(
-                si.next().unwrap().split('[').skip(1).next().unwrap().parse::<usize>().unwrap(),
+                si.next().unwrap().split('[').nth(1).unwrap().parse::<usize>().unwrap(),
                 si.next().unwrap().parse::<u64>().unwrap(),
             ))
         }
@@ -101,8 +101,7 @@ fn part1(input: &[Instruction]) -> u64 {
     for i in input {
         vm.process(i);
     }
-    vm.mem.iter()
-        .map(|(_,v)| v)
+    vm.mem.values()
         .sum()
 }
 
@@ -111,8 +110,7 @@ fn part2(input: &[Instruction]) -> u64 {
     for i in input {
         vm.process_v2(i);
     }
-    vm.mem.iter()
-        .map(|(_,v)| v)
+    vm.mem.values()
         .sum()
 }
 

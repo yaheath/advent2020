@@ -32,10 +32,10 @@ fn part2(input: &[i64], preamble_len: usize) -> i64 {
         let mut sum = 0i64;
         let mut min = input[start];
         let mut max = input[start];
-        for i in start.. {
-            sum += input[i];
-            min = min.min(input[i]);
-            max = max.max(input[i]);
+        for inp in input.iter().skip(start) {
+            sum += *inp;
+            min = min.min(*inp);
+            max = max.max(*inp);
             if sum > target { break; }
             if sum == target {
                 return min + max;

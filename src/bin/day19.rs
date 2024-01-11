@@ -23,8 +23,8 @@ impl FromStr for RuleEntry {
         let mut spl = s.split(": ");
         let id = spl.next().unwrap().parse::<usize>().unwrap();
         let rule = spl.next().unwrap();
-        if rule.contains("\"") {
-            Ok(RuleEntry { id, rule: Rule::Char(rule.chars().skip(1).next().unwrap()) })
+        if rule.contains('\"') {
+            Ok(RuleEntry { id, rule: Rule::Char(rule.chars().nth(1).unwrap()) })
         }
         else {
             let seqs: Vec<Vec<RuleNum>> = rule.split(" | ").map(
@@ -78,15 +78,14 @@ fn process_rules<'a>(s: &'a str, rule_num: RuleNum, rules: &HashMap<RuleNum, Rul
 fn is_match(s: &str, rules: &HashMap<RuleNum, Rule>) -> bool {
     process_rules(s, 0, rules)
         .iter()
-        .find(|&&r| r == "")
-        .is_some()
+        .any(|&r| r.is_empty())
 }
 
-fn part1(rules: &HashMap<RuleNum, Rule>, strings: &Vec<String>) -> usize {
+fn part1(rules: &HashMap<RuleNum, Rule>, strings: &[String]) -> usize {
     strings.iter().filter(|s| is_match(s, rules)).count()
 }
 
-fn part2(rules: &HashMap<RuleNum, Rule>, strings: &Vec<String>) -> usize {
+fn part2(rules: &HashMap<RuleNum, Rule>, strings: &[String]) -> usize {
     let mut rules = rules.clone();
     rules.insert(8, Rule::AltSeq(vec![vec![42], vec![42, 8]]));
     rules.insert(11, Rule::AltSeq(vec![vec![42, 31], vec![42, 11, 31]]));

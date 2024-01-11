@@ -28,7 +28,7 @@ impl FromStr for BagRule {
                 let c:String = cap.get(2).unwrap().as_str().to_string();
                 contains.insert(c, n);
             }
-            Ok(BagRule {color: color, contains: contains})
+            Ok(BagRule {color, contains})
         }
         else {
             Err(())
@@ -92,7 +92,7 @@ fn traverse_down(bag_tree: &HashMap<String, BagTreeNode>, color: String, bag_cou
 
 fn part1(bag_tree: &HashMap<String, BagTreeNode>) -> usize {
     let mut traversed: HashSet<String> = HashSet::new();
-    traverse_up(&bag_tree, "shiny gold".to_string(), &mut traversed);
+    traverse_up(bag_tree, "shiny gold".to_string(), &mut traversed);
     traversed.len() - 1
 }
 

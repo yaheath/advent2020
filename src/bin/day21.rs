@@ -12,7 +12,7 @@ impl FromStr for Food {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut splt = s.split(" (contains ");
-        let ingredients = splt.next().unwrap().split(" ").map(|s| s.into()).collect();
+        let ingredients = splt.next().unwrap().split(' ').map(|s| s.into()).collect();
         let alg = splt.next().unwrap();
         let alg2 = &alg[0 .. alg.len() - 1];
         let allergens = alg2.split(", ").map(|s| s.into()).collect();
@@ -38,7 +38,7 @@ fn bothparts(input: &[Food]) -> (usize, String) {
         .count();
 
     let mut matched: HashMap<String,String> = HashMap::new();
-    while allergen_map.len() > 0 {
+    while !allergen_map.is_empty() {
         let (alg, ing) = allergen_map
             .iter()
             .filter(|(_,v)| v.len() == 1)
