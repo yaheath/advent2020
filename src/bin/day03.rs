@@ -1,7 +1,5 @@
-extern crate advent_lib;
-use std::cmp::max;
-use advent_lib::read::read_input;
-use advent_lib::grid::Grid;
+use ya_advent_lib::read::read_input;
+use ya_advent_lib::grid::Grid;
 
 #[derive(Clone, Copy)]
 enum Cell {
@@ -10,50 +8,29 @@ enum Cell {
 }
 impl Cell {
     fn is_empty(&self) -> bool {
-        match *self {
-            Cell::Empty => true,
-            _ => false,
+        matches!(self, Cell::Empty)
+    }
+}
+impl From<char> for Cell {
+    fn from(c: char) -> Self {
+        match c {
+            '#' => Cell::Tree,
+            _ => Cell::Empty,
         }
     }
 }
 
-fn main() {
-    let data = read_input::<String>();
-    let width = data.iter().map(|s| s.len()).fold(0, |maxw, w| max(w, maxw)) as i64;
-    let height = data.len() as i64;
-    let mut grid = Grid::new(0, 0, width-1, height-1, Cell::Empty);
-
-    let mut y = 0i64;
-    for line in data.iter() {
-        for (ux, c) in line.chars().enumerate() {
-            let x = ux as i64;
-            let cell = match c {
-                '#' => Cell::Tree,
-                _ => Cell::Empty,
-            };
-            if !cell.is_empty() {
-                grid.set(x, y, cell);
-            }
-        }
-        y += 1;
-    }
-
-    part1(&grid);
-    part2(&grid);
+fn part1(grid: &Grid<Cell>) -> usize {
+    test_slope(grid, 3, 1)
 }
 
-fn part1(grid: &Grid<Cell>) {
-    let count = test_slope(grid, 3, 1);
-    println!("Part 1: {}", count);
-}
-
-fn part2(grid: &Grid<Cell>) {
+fn part2(grid: &Grid<Cell>) -> usize {
     let mut p = test_slope(grid, 1, 1);
     p *= test_slope(grid, 3, 1);
     p *= test_slope(grid, 5, 1);
     p *= test_slope(grid, 7, 1);
     p *= test_slope(grid, 1, 2);
-    println!("Part 2: {}", p);
+    p
 }
 
 fn test_slope(grid: &Grid<Cell>, xs: i64, ys: i64) -> usize {
@@ -71,4 +48,25 @@ fn test_slope(grid: &Grid<Cell>, xs: i64, ys: i64) -> usize {
         y += ys;
     }
     count
+}
+
+fn main() {
+    let input:Vec<String> = read_input();
+    let grid = Grid::from_input(&input, Cell::Empty, 0);
+    println!("Part 1: {}", part1(&grid));
+    println!("Part 2: {}", part2(&grid));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ya_advent_lib::read::test_input;
+
+    #[test]
+    fn day03_test() {
+        let input:Vec<String> = test_input(include_str!("day03.testinput"));
+        let grid = Grid::from_input(&input, Cell::Empty, 0);
+        assert_eq!(part1(&grid), 7);
+        assert_eq!(part2(&grid), 336);
+    }
 }

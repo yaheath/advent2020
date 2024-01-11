@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use std::vec::Vec;
-extern crate advent_lib;
-use advent_lib::read::read_input;
+use ya_advent_lib::read::read_input;
 
 fn part1(input: &Vec<i64>) -> i64 {
     let mut list = input.clone();

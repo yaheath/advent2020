@@ -2,9 +2,8 @@ use std::collections::HashSet;
 use std::ops::Range;
 use std::vec::Vec;
 use std::str::FromStr;
-extern crate advent_lib;
-use advent_lib::range::range_from_str;
-use advent_lib::read::read_grouped_input;
+use ya_advent_lib::range::range_from_str;
+use ya_advent_lib::read::read_grouped_input;
 
 #[derive(Clone, Debug)]
 struct Rule {

@@ -1,6 +1,5 @@
 use std::vec::Vec;
-extern crate advent_lib;
-use advent_lib::read::read_input;
+use ya_advent_lib::read::read_input;
 
 fn modpow(base: u64, exp: u64, m: u64) -> u64 {
     if exp == 0 { return 1; }

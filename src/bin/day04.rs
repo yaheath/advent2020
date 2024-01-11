@@ -1,10 +1,8 @@
-#[macro_use] extern crate lazy_static;
 use std::collections::HashMap;
-use std::iter::once;
 use std::str::FromStr;
+use lazy_static::lazy_static;
 use regex::Regex;
-extern crate advent_lib;
-use advent_lib::read::read_input;
+use ya_advent_lib::read::read_grouped_input;
 
 const EXPECTED_FIELDS: &[&str] = &[
     "byr", // (Birth Year)
@@ -130,20 +128,55 @@ impl FromStr for Passport {
     }
 }
 
+fn part1(input: &[Passport]) -> usize {
+    input.iter().filter(|p| p.is_valid()).count()
+}
+
+fn part2(input: &[Passport]) -> usize {
+    input.iter().filter(|p| p.is_valid_2()).count()
+}
+
 fn main() {
-    let input: Vec<String> = read_input::<String>();
-    let mut lineset: Vec<String> = Vec::new();
-    let mut passports: Vec<Passport> = Vec::new();
-    for line in input.iter().map(|s| s.as_str()).chain(once("")) {
-        if line == "" {
-            passports.push(Passport::from_str(&lineset.join(" ")).unwrap());
-            lineset.clear();
-        } else {
-            lineset.push(line.to_string());
+    let input: Vec<Vec<String>> = read_grouped_input();
+    let input = input.into_iter()
+        .map(|lineset| Passport::from_str(&lineset.join(" ")).unwrap())
+        .collect::<Vec<_>>();
+    println!("Part 1: {}", part1(&input));
+    println!("Part 2: {}", part2(&input));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ya_advent_lib::read::grouped_test_input;
+
+    #[test]
+    fn day04_test() {
+        let input:Vec<Vec<String>> = grouped_test_input(include_str!("day04.testinput"));
+        let input = input.into_iter()
+            .map(|lineset| Passport::from_str(&lineset.join(" ")).unwrap())
+            .collect::<Vec<_>>();
+        assert_eq!(part1(&input), 2);
+        assert_eq!(part2(&input), 2);
+
+        for i in [
+"eyr:1972 cid:100 hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926",
+"iyr:2019 hcl:#602927 eyr:1967 hgt:170cm ecl:grn pid:012533040 byr:1946",
+"hcl:dab227 iyr:2012 ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277",
+"hgt:59cm ecl:zzz eyr:2038 hcl:74454a iyr:2023 pid:3556412378 byr:2007",
+        ] {
+            let p = i.parse::<Passport>().unwrap();
+            assert_eq!(p.is_valid_2(), false);
+        }
+
+        for i in [
+"pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980 hcl:#623a2f",
+"eyr:2029 ecl:blu cid:129 byr:1989 iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm",
+"hcl:#888785 hgt:164cm byr:2001 iyr:2015 cid:88 pid:545766238 ecl:hzl eyr:2022",
+"iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719",
+        ] {
+            let p = i.parse::<Passport>().unwrap();
+            assert_eq!(p.is_valid_2(), true);
         }
     }
-    let numvalid = passports.iter().filter(|p| p.is_valid()).count();
-    println!("Part 1: {}", numvalid);
-    let numvalid2 = passports.iter().filter(|p| p.is_valid_2()).count();
-    println!("Part 2: {}", numvalid2);
 }

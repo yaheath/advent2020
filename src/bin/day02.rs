@@ -1,9 +1,8 @@
-#[macro_use] extern crate lazy_static;
 use std::vec::Vec;
 use std::str::FromStr;
+use lazy_static::lazy_static;
 use regex::Regex;
-extern crate advent_lib;
-use advent_lib::read::read_input;
+use ya_advent_lib::read::read_input;
 
 #[derive(Debug)]
 struct Pass {
@@ -51,18 +50,29 @@ impl FromStr for Pass {
     }
 }
 
-fn part1(input: &Vec<Pass>) {
-    let result = input.iter().filter(|p| p.is_valid_part1()).count();
-    println!("Part 1: {}", result);
+fn part1(input: &[Pass]) -> usize {
+    input.iter().filter(|p| p.is_valid_part1()).count()
 }
 
-fn part2(input: &Vec<Pass>) {
-    let result = input.iter().filter(|p| p.is_valid_part2()).count();
-    println!("Part 2: {}", result);
+fn part2(input: &[Pass]) -> usize {
+    input.iter().filter(|p| p.is_valid_part2()).count()
 }
 
 fn main() {
     let input: Vec<Pass> = read_input::<Pass>();
-    part1(&input);
-    part2(&input);
+    println!("Part 1: {}", part1(&input));
+    println!("Part 2: {}", part2(&input));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ya_advent_lib::read::test_input;
+
+    #[test]
+    fn day02_test() {
+        let input:Vec<Pass> = test_input(include_str!("day02.testinput"));
+        assert_eq!(part1(&input), 2);
+        assert_eq!(part2(&input), 1);
+    }
 }

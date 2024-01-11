@@ -3,8 +3,7 @@ use std::num::ParseIntError;
 use std::str::FromStr;
 use std::vec::Vec;
 use itertools::Itertools;
-extern crate advent_lib;
-use advent_lib::read::read_input;
+use ya_advent_lib::read::read_input;
 
 #[derive(Debug, Eq, PartialEq, Clone)]
 struct Mask {

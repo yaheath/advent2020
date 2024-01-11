@@ -3,8 +3,7 @@ use std::collections::hash_map::{Iter,IterMut};
 use std::ops::Range;
 use std::vec::Vec;
 use itertools::Itertools;
-extern crate advent_lib;
-use advent_lib::read::read_input;
+use ya_advent_lib::read::read_input;
 
 #[derive(Clone)]
 struct GridND<T: Copy> {

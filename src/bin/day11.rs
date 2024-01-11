@@ -1,7 +1,6 @@
 use std::vec::Vec;
-extern crate advent_lib;
-use advent_lib::read::read_input;
-use advent_lib::grid::Grid;
+use ya_advent_lib::read::read_input;
+use ya_advent_lib::grid::Grid;
 
 #[derive(Clone, Copy)]
 enum Seat {
@@ -12,12 +11,18 @@ enum Seat {
     NextOccupied,
 }
 
-fn mkgrid(input: &Vec<String>) -> Grid<Seat> {
-    Grid::from_input(&input, Seat::Floor, 1, |c| match c {
-        'L' => Seat::Empty,
-        '#' => Seat::Occupied,
-        _ => Seat::Floor,
-    })
+impl From<char> for Seat {
+    fn from(c: char) -> Self {
+        match c {
+            'L' => Seat::Empty,
+            '#' => Seat::Occupied,
+            _ => Seat::Floor,
+        }
+    }
+}
+
+fn mkgrid(input: &[String]) -> Grid<Seat> {
+    Grid::from_input(&input, Seat::Floor, 1)
 }
 
 fn neighbors_immed(x: i64, y: i64, grid: &Grid<Seat>) -> usize {
@@ -106,7 +111,7 @@ fn step(grid: &mut Grid<Seat>, part2: bool) -> bool {
     changed
 }
 
-fn part1(input: &Vec<String>) -> usize {
+fn part1(input: &[String]) -> usize {
     let mut grid = mkgrid(input);
 
     while step(&mut grid, false) { }
@@ -114,7 +119,7 @@ fn part1(input: &Vec<String>) -> usize {
     grid.iter().filter(|s| matches!(s, Seat::Occupied)).count()
 }
 
-fn part2(input: &Vec<String>) -> usize {
+fn part2(input: &[String]) -> usize {
     let mut grid = mkgrid(input);
 
     while step(&mut grid, true) { }
@@ -123,7 +128,7 @@ fn part2(input: &Vec<String>) -> usize {
 }
 
 fn main() {
-    let input = read_input::<String>();
+    let input: Vec<String> = read_input();
 
     println!("Part 1: {}", part1(&input));
     println!("Part 2: {}", part2(&input));

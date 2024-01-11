@@ -1,7 +1,6 @@
 use std::collections::{HashSet, VecDeque};
 use std::vec::Vec;
-extern crate advent_lib;
-use advent_lib::read::read_grouped_input;
+use ya_advent_lib::read::read_grouped_input;
 
 enum Winner {
     P1,
@@ -102,7 +101,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use advent_lib::read::grouped_test_input;
+    use ya_advent_lib::read::grouped_test_input;
 
     #[test]
     fn day22_test() {

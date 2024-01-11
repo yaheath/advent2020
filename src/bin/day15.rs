@@ -1,7 +1,6 @@
 //use std::collections::HashMap;
 use std::vec::Vec;
-extern crate advent_lib;
-use advent_lib::read::input_as_string;
+use ya_advent_lib::read::input_as_string;
 
 fn doit(input: &str, target: usize) -> usize {
     let starting: Vec<usize> = input.split(',').flat_map(|s| s.parse::<usize>()).collect();

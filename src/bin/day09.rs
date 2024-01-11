@@ -1,7 +1,6 @@
 use std::vec::Vec;
 use itertools::Itertools;
-extern crate advent_lib;
-use advent_lib::read::read_input;
+use ya_advent_lib::read::read_input;
 
 fn part1(input: &Vec<i64>) -> i64 {
     input

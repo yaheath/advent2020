@@ -2,8 +2,7 @@ use std::collections::{HashMap,HashSet};
 use std::str::FromStr;
 use std::vec::Vec;
 use itertools::Itertools;
-extern crate advent_lib;
-use advent_lib::read::read_input;
+use ya_advent_lib::read::read_input;
 
 struct Food {
     ingredients: HashSet<String>,
@@ -68,7 +67,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use advent_lib::read::test_input;
+    use ya_advent_lib::read::test_input;
 
     #[test]
     fn day21_test() {

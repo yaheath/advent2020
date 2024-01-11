@@ -1,7 +1,6 @@
 use std::vec::Vec;
 use peg;
-extern crate advent_lib;
-use advent_lib::read::read_input;
+use ya_advent_lib::read::read_input;
 
 peg::parser!{
     grammar day18_parse() for str {

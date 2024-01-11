@@ -1,36 +1,59 @@
 use std::vec::Vec;
-extern crate advent_lib;
-use advent_lib::read::read_input;
+use std::str::FromStr;
+use ya_advent_lib::read::read_input;
 
-fn part1(input: &Vec<usize>) {
-    let mut max = 0usize;
-    for val in input {
-        if *val > max {
-            max = *val;
-        }
+struct SeatID(String);
+
+impl FromStr for SeatID {
+    type Err = ();
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(SeatID(s.to_owned()))
     }
-    println!("Part 1: {}", max);
 }
 
-fn part2(input: &Vec<usize>) {
-    let mut last = input.get(0).unwrap();
-    for val in input {
-        if *val == last + 2 {
-            println!("Part 2: {}", last + 1);
-            return;
-        }
-        last = val;
+impl From<SeatID> for usize {
+    fn from(s: SeatID) -> Self {
+        usize::from_str_radix(
+            &(s.0).replace('B', "1").replace('F', "0").replace('R', "1").replace('L', "0"),
+            2,
+        ).unwrap()
     }
+}
+
+fn part1(input: &[usize]) -> usize {
+    input.iter().copied().max().unwrap()
+}
+
+fn part2(input: &[usize]) -> usize {
+    input.windows(2)
+        .find(|a| a[0] + 2 == a[1])
+        .map(|a| a[0] + 1)
+        .unwrap()
 }
 
 fn main() {
-    let mut input: Vec<usize> = read_input::<String>().iter().map(
-        |s| usize::from_str_radix(
-            &s.replace('B', "1").replace('F', "0").replace('R', "1").replace('L', "0"),
-            2
-        ).unwrap()
-    ).collect();
+    let input: Vec<SeatID> = read_input();
+    let mut input: Vec<usize> = input.into_iter().map(|s| s.into()).collect();
     input.sort_unstable();
-    part1(&input);
-    part2(&input);
+    println!("Part 1: {}", part1(&input));
+    println!("Part 2: {}", part2(&input));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn day05_test() {
+        let si: usize = "FBFBBFFRLR".parse::<SeatID>().unwrap().into();
+        assert_eq!(si, 357);
+        let si: usize = "BFFFBBFRRR".parse::<SeatID>().unwrap().into();
+        assert_eq!(si, 567);
+        let si: usize = "FFFBBBFRRR".parse::<SeatID>().unwrap().into();
+        assert_eq!(si, 119);
+        let si: usize = "BBFFBBFRLL".parse::<SeatID>().unwrap().into();
+        assert_eq!(si, 820);
+        let p2 = [6,7,8,9,11,12];
+        assert_eq!(part2(&p2), 10);
+    }
 }

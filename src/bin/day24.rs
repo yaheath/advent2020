@@ -1,8 +1,7 @@
 use std::str::FromStr;
 use std::vec::Vec;
-extern crate advent_lib;
-use advent_lib::read::read_input;
-use advent_lib::infinite_grid::InfiniteGrid;
+use ya_advent_lib::read::read_input;
+use ya_advent_lib::infinite_grid::InfiniteGrid;
 
 #[derive(Clone,Copy,Debug)]
 enum Dir {
@@ -152,7 +151,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use advent_lib::read::test_input;
+    use ya_advent_lib::read::test_input;
 
     #[test]
     fn day24_test() {

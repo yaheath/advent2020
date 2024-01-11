@@ -1,8 +1,7 @@
 use std::collections::{HashMap,HashSet,VecDeque};
 use std::vec::Vec;
-extern crate advent_lib;
-use advent_lib::read::read_grouped_input;
-use advent_lib::grid::Grid;
+use ya_advent_lib::read::read_grouped_input;
+use ya_advent_lib::grid::Grid;
 
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 enum Edge {
@@ -58,7 +57,7 @@ impl Tile {
             .parse::<u64>().unwrap();
         let data:Vec<String> = input.iter().skip(1).cloned().collect();
 
-        let grid = Grid::from_input(&data, false, 0,
+        let grid = Grid::from_input_map(&data, false, 0,
             |c| match c { '#' => true, '.' => false, _ => panic!() });
 
         let edge = Self::extract_edges(&grid);
@@ -313,7 +312,7 @@ fn part2(tiles: &Vec<Tile>) -> usize {
 
 #[allow(dead_code)]
 fn printgrid(grid: &Grid<bool>) {
-    grid.print(|c| if c {'#'} else {'.'});
+    grid.print_str(|c| if c {"#".into()} else {".".into()});
 }
 #[allow(dead_code)]
 fn dump_grid(grid: &Grid<bool>) {
@@ -356,7 +355,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use advent_lib::read::grouped_test_input;
+    use ya_advent_lib::read::grouped_test_input;
 
     #[test]
     fn day20_test() {

@@ -1,8 +1,7 @@
 use std::collections::HashMap;
 use std::iter::once;
 use std::vec::Vec;
-extern crate advent_lib;
-use advent_lib::read::read_input;
+use ya_advent_lib::read::read_input;
 
 fn main() {
     let input: Vec<String> = read_input::<String>();
