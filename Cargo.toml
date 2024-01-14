@@ -11,6 +11,6 @@ regex = "*"
 lazy_static = "*"
 #linked-list = "0"
 itertools = "*"
-ya_advent_lib = { path = "../advent_lib" }
+ya_advent_lib = "1.4.0"
 ahash = "0.8.2"
 peg = "0.8.1"
